@@ -15,9 +15,9 @@ class AddedUserProfileFields extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('github_user_name')->unique()->nullable()->after('email');
-            $table->bigInteger('drupal_user_id')->nullable()->after('github_user_name');
-            $table->bigInteger('twitter_user_id')->nullable()->after('drupal_user_id');
-            $table->bigInteger('linkedin_user_id')->nullable()->after('twitter_user_id');
+            $table->bigInteger('drupal_user_id')->unique()->nullable()->after('github_user_name');
+            $table->bigInteger('twitter_user_id')->unique()->nullable()->after('drupal_user_id');
+            $table->bigInteger('linkedin_user_id')->unique()->nullable()->after('twitter_user_id');
         });
     }
 
