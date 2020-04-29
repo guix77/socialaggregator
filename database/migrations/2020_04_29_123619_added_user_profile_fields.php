@@ -14,10 +14,10 @@ class AddedUserProfileFields extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->bigInteger('github_user_id')->after('email');
-            $table->bigInteger('drupal_user_id')->after('github_user_id');
-            $table->bigInteger('twitter_user_id')->after('drupal_user_id');
-            $table->bigInteger('linkedin_user_id')->after('twitter_user_id');
+            $table->bigInteger('github_user_id')->nullable()->after('email');
+            $table->bigInteger('drupal_user_id')->nullable()->after('github_user_id');
+            $table->bigInteger('twitter_user_id')->nullable()->after('drupal_user_id');
+            $table->bigInteger('linkedin_user_id')->nullable()->after('twitter_user_id');
         });
     }
 
