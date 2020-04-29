@@ -7,37 +7,37 @@ use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+    public function __construct()
+    {
+        $this->middleware('ajax')->only('destroy');
+    }
+
     public function edit(User $user)
     {
+        $this->authorize('manage', $user);
         return view('profile.edit', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $this->authorize('manage', $user);
+        $request->validate([
+            'github_user_name' => 'nullable|string',
+            'drupal_user_id' => 'nullable|numeric',
+            'twitter_user_id' => 'nullable|numeric',
+            'linkedin_user_id' => 'nullable|numeric',
+        ]);
+        $user->github_user_name = $request->github_user_name;
+        $user->drupal_user_id = $request->drupal_user_id;
+        $user->save();
+        return back()->with('ok', __('The profile has been successfully updated.'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $this->authorize('manage', $user);
+        $user->delete();
+        return response()->json();
     }
 }

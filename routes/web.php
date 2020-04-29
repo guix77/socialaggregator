@@ -19,7 +19,7 @@ Route::get('/', 'HomeController@index')->name('home');
 
 Route::middleware('auth', 'verified')->group(function () {
     Route::resource('profile', 'ProfileController', [
-        'only' => ['edit', 'update', 'destroy', 'show'],
+        'only' => ['edit', 'update', 'destroy'],
         'parameters' => ['profile' => 'user']
     ]);
 });

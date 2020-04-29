@@ -6,6 +6,7 @@
 
 + Nodes: https://www.drupal.org/api-d7/node.json?author=173213&sort=nid&direction=DESC
 + Comments: https://www.drupal.org/api-d7/comment.json?author=173213&sort=cid&direction=DESC
++ https://api.github.com/users/guix77/received_events
 
 
 ## Not interesting

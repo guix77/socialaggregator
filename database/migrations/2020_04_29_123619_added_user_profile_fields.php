@@ -14,8 +14,8 @@ class AddedUserProfileFields extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->bigInteger('github_user_id')->nullable()->after('email');
-            $table->bigInteger('drupal_user_id')->nullable()->after('github_user_id');
+            $table->string('github_user_name')->unique()->nullable()->after('email');
+            $table->bigInteger('drupal_user_id')->nullable()->after('github_user_name');
             $table->bigInteger('twitter_user_id')->nullable()->after('drupal_user_id');
             $table->bigInteger('linkedin_user_id')->nullable()->after('twitter_user_id');
         });
@@ -29,7 +29,7 @@ class AddedUserProfileFields extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('github_user_id');
+            $table->dropColumn('github_user_name');
             $table->dropColumn('drupal_user_id');
             $table->dropColumn('twitter_user_id');
             $table->dropColumn('linkedin_user_id');
