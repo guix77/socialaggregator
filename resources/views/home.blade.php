@@ -17,6 +17,7 @@
                     <tr>
                         <td>{{ $user->name }}</td>
                         <td>
+                            @can('update', $user)
                             <a href={{ route('users.edit', $user->id) }} class="btn btn-primary btn-sm">
                                 {{ __('Edit') }}
                             </a>
@@ -25,12 +26,15 @@
                                 @method('DELETE')
                                 <input type="submit" class="btn btn-danger btn-sm" value={{ __('Delete user') }}>
                             </form>
+                            @endcan
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
+            @can('create user')
             <a href={{ route('users.create') }} class="btn btn-primary">{{ __('Create user') }}</a>
+            @endcan
         </div>
     </div>
     <div class="row my-4">

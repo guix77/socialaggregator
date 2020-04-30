@@ -2,9 +2,11 @@
 
 @section('card')
 @component('components.card')
+
 @slot('title')
 @lang('Edit user')
 @endslot
+
 <form method="POST" action="{{ route('users.update', $user->id) }}">
     @csrf
     @method('PUT')
@@ -37,5 +39,18 @@
     @lang('Save')
     @endcomponent
 </form>
+
+@slot('footer')
+@can('delete', $user)
+<div>
+    <form method="POST" action="{{ route('users.destroy', $user->id) }}">
+        @csrf
+        @method('DELETE')
+        <input type="submit" class="btn btn-danger" value={{ __('Delete user') }}>
+    </form>
+</div>
+@endcan
+@endslot
+
 @endcomponent
 @endsection

@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(User::class, 'user');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -81,9 +86,11 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
+            'name' => ['required', 'string', 'max:255'],
             'github_user_name' => 'nullable|string',
             'drupal_user_id' => 'nullable|numeric',
         ]);
+        $user->name = $request->name;
         $user->github_user_name = $request->github_user_name;
         $user->drupal_user_id = $request->drupal_user_id;
         $user->save();

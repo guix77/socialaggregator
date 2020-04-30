@@ -13,7 +13,8 @@ class RolePermissionSeeder extends Seeder
      */
     public function run()
     {
-        $adminRole = Role::create(['name' => 'admin']);
+        Role::create(['name' => 'admin']);
+        Permission::create(['name' => 'create user']);
         $clientRole = Role::create(['name' => 'client']);
         $viewAllItemspermission = Permission::create(['name' => 'view all items']);
         $clientRole->givePermissionTo($viewAllItemspermission);
