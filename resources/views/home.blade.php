@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    You are logged in!
+                    <a href={{ route('user.new') }}>New user</a>
                 </div>
             </div>
         </div>

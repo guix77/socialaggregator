@@ -7,8 +7,10 @@ Auth::routes(['register' => false]);
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::middleware('auth', 'verified')->group(function () {
-    Route::resource('profile', 'ProfileController', [
-        'only' => ['edit', 'update', 'destroy'],
-        'parameters' => ['profile' => 'user']
+    Route::resource('users', 'UserController', [
+        'only' => ['create', 'edit', 'update', 'destroy'],
+        'parameters' => ['user' => 'user']
     ]);
+    Route::get('/users/new', 'UserController@new')->name('user.new');
+    // Route::post('/users/create', 'UserController@create')->name('user.create');
 });

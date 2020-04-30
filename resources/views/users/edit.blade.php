@@ -3,10 +3,10 @@
 @section('card')
 @component('components.card')
 @slot('title')
-@lang('Edit profile')
-<a href="{{ route('profile.destroy', $user->id) }}" class="btn btn-danger btn-sm float-right" role="button" aria-disabled="true"><i class="fas fa-angry fa-lg"></i> @lang('Delete my account')</a>
+@lang('Edit user')
+<a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger btn-sm float-right" role="button" aria-disabled="true"><i class="fas fa-angry fa-lg"></i> @lang('Delete my account')</a>
 @endslot
-<form method="POST" action="{{ route('profile.update', $user->id) }}">
+<form method="POST" action="{{ route('users.update', $user->id) }}">
     @csrf
     @method('PUT')
 
