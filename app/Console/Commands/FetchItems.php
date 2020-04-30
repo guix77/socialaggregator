@@ -10,8 +10,10 @@ use Illuminate\Support\Str;
 
 class FetchItems extends Command
 {
+    const NETWORK_DRUPAL = 'Drupal.org';
     const ENDPOINT_DRUPAL_NODES = 'https://www.drupal.org/api-d7/node.json?sort=nid&direction=DESC';
     const ENDPOINT_DRUPAL_COMMENTS = 'https://www.drupal.org/api-d7/comment.json?sort=cid&direction=DESC';
+    const NETWORK_GITHUB = 'GitHub.com';
     const ENDPOINT_GITHUB_ACTIVITY = 'https://github.com/';
 
     /**
@@ -60,6 +62,7 @@ class FetchItems extends Command
                         $item->user_id = $user->id;
                         $item->title = $remoteItem->title;
                         $item->url = $remoteItem->url;
+                        $item->network = self::NETWORK_DRUPAL;
                         $item->published_at = date('Y-m-d H:i:s', $remoteItem->created);
                         $item->save();
                     }
@@ -78,19 +81,23 @@ class FetchItems extends Command
                             ? $remoteItem->subject
                             : Str::limit(strip_tags($remoteItem->comment_body->value), 252);
                             $item->url = $remoteItem->url;
+                            $item->network = self::NETWORK_DRUPAL;
                             $item->published_at = date('Y-m-d H:i:s', $remoteItem->created);
                             $item->save();
                         }
                     }
                 }
-                // GitHub activity.
+            }
+            // GitHub activity.
+            if ($user->github_user_name) {
                 $result = simplexml_load_file(self::ENDPOINT_GITHUB_ACTIVITY . $user->github_user_name . '.atom');
                 foreach ($result->entry as $remoteItem) {
-                    if (!Item::where('url', '=', $remoteItem->link->attributes['href'])->count()) {
+                    if (!Item::where('url', '=', $remoteItem->link->attributes()['href'])->count()) {
                         $item = new Item;
                         $item->user_id = $user->id;
                         $item->title = $remoteItem->title[0];
                         $item->url = $remoteItem->link->attributes()['href'];
+                        $item->network = self::NETWORK_GITHUB;
                         $publishedAtDateTime = new DateTime($remoteItem->published);
                         $item->published_at = $publishedAtDateTime->format('Y-m-d H:i:s');
                         $item->save();

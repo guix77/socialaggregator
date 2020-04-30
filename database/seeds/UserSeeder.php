@@ -1,6 +1,8 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -11,14 +13,13 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            'name' => env('INITIAL_USER_NAME'),
-            'email' => env('INITIAL_USER_EMAIL'),
-            'github_user_name' => env('INITIAL_USER_GITHUB_USER_NAME'),
-            'drupal_user_id' => env('INITIAL_USER_DRUPAL_USER_ID'),
-            'password' => bcrypt(env('INITIAL_USER_PASSWORD')),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $user = new User;
+        $user->name = env('INITIAL_USER_NAME');
+        $user->email = env('INITIAL_USER_EMAIL');
+        $user->github_user_name = env('INITIAL_USER_GITHUB_USER_NAME');
+        $user->drupal_user_id = env('INITIAL_USER_DRUPAL_USER_ID');
+        $user->password = Hash::make(env('INITIAL_USER_PASSWORD'));
+        $user->save();
+        $user->assignRole('admin');
     }
 }
