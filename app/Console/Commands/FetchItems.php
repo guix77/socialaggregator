@@ -11,6 +11,7 @@ class FetchItems extends Command
 {
     const ENDPOINT_DRUPAL_NODES = 'https://www.drupal.org/api-d7/node.json?sort=nid&direction=DESC';
     const ENDPOINT_DRUPAL_COMMENTS = 'https://www.drupal.org/api-d7/comment.json?sort=cid&direction=DESC';
+    const ENDPOINT_GITHUB_ACTIVITY = 'https://github.com/';
 
     /**
      * The name and signature of the console command.
@@ -47,7 +48,7 @@ class FetchItems extends Command
         foreach ($users as $user) {
             // Drupal.
             if ($user->drupal_user_id) {
-                // Drupal nodes.
+                // // Drupal nodes.
                 $result = json_decode(file_get_contents(self::ENDPOINT_DRUPAL_NODES . '&author=' . $user->drupal_user_id));
                 $remoteItems = $result->list;
                 foreach ($remoteItems as $remoteItem) {
@@ -75,6 +76,17 @@ class FetchItems extends Command
                             $item->url = $remoteItem->url;
                             $item->save();
                         }
+                    }
+                }
+                // GitHub activity.
+                $result = simplexml_load_file(self::ENDPOINT_GITHUB_ACTIVITY . $user->github_user_name . '.atom');
+                foreach ($result->entry as $remoteItem) {
+                    if (!Item::where('url', '=', $remoteItem->link->attributes['href'])->count()) {
+                        $item = new Item;
+                        $item->user_id = $user->id;
+                        $item->title = $remoteItem->title[0];
+                        $item->url = $remoteItem->link->attributes['href'];
+                        $item->save();
                     }
                 }
             }
