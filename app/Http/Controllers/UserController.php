@@ -8,18 +8,33 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-
-    public function __construct()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
-        $this->middleware('ajax')->only('destroy');
+        //
     }
 
-    public function new()
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
-        return view('users.new');
+        return view('users.create');
     }
 
-    public function create(Request $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -27,37 +42,63 @@ class UserController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
         $user = new User;
+        $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->save();
-        return back()->with('ok', __('The user has been created.'));
+        return redirect()->route('home')->with('success', __('User created!'));
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function show(User $user)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
     public function edit(User $user)
     {
-        $this->authorize('manage', $user);
         return view('users.edit', compact('user'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request, User $user)
     {
-        $this->authorize('manage', $user);
         $request->validate([
             'github_user_name' => 'nullable|string',
             'drupal_user_id' => 'nullable|numeric',
-            'twitter_user_id' => 'nullable|numeric',
-            'linkedin_user_id' => 'nullable|numeric',
         ]);
         $user->github_user_name = $request->github_user_name;
         $user->drupal_user_id = $request->drupal_user_id;
         $user->save();
-        return back()->with('ok', __('The user has been updated.'));
+        return redirect()->route('home')->with('success', __('User updated!'));
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
     public function destroy(User $user)
     {
-        $this->authorize('manage', $user);
         $user->delete();
-        return response()->json();
+        return redirect()->route('home')->with('success', __('User destroyed!'));
     }
 }

@@ -5,7 +5,7 @@
 @slot('title')
 @lang('Create user')
 @endslot
-<form method="POST" action="{{ route('users.create') }}">
+<form method="POST" action="{{ route('users.store') }}">
     @csrf
     @method('POST')
 
@@ -27,6 +27,13 @@
     'title' => __('Password'),
     'type' => 'password',
     'name' => 'password',
+    'required' => true
+    ])
+
+    @include('partials.form-group', [
+    'title' => __('Password confirmation'),
+    'type' => 'password',
+    'name' => 'password_confirmation',
     'required' => true
     ])
 
