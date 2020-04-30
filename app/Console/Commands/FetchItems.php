@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\User;
 use App\Item;
+use DateTime;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -49,7 +50,9 @@ class FetchItems extends Command
             // Drupal.
             if ($user->drupal_user_id) {
                 // // Drupal nodes.
-                $result = json_decode(file_get_contents(self::ENDPOINT_DRUPAL_NODES . '&author=' . $user->drupal_user_id));
+                $result = json_decode(
+                    file_get_contents(self::ENDPOINT_DRUPAL_NODES . '&author=' . $user->drupal_user_id)
+                );
                 $remoteItems = $result->list;
                 foreach ($remoteItems as $remoteItem) {
                     if (!Item::where('url', '=', $remoteItem->url)->count()) {
@@ -57,6 +60,7 @@ class FetchItems extends Command
                         $item->user_id = $user->id;
                         $item->title = $remoteItem->title;
                         $item->url = $remoteItem->url;
+                        $item->published_at = date('Y-m-d H:i:s', $remoteItem->created);
                         $item->save();
                     }
                 }
@@ -74,6 +78,7 @@ class FetchItems extends Command
                             ? $remoteItem->subject
                             : Str::limit(strip_tags($remoteItem->comment_body->value), 252);
                             $item->url = $remoteItem->url;
+                            $item->published_at = date('Y-m-d H:i:s', $remoteItem->created);
                             $item->save();
                         }
                     }
@@ -85,7 +90,9 @@ class FetchItems extends Command
                         $item = new Item;
                         $item->user_id = $user->id;
                         $item->title = $remoteItem->title[0];
-                        $item->url = $remoteItem->link->attributes['href'];
+                        $item->url = $remoteItem->link->attributes()['href'];
+                        $publishedAtDateTime = new DateTime($remoteItem->published);
+                        $item->published_at = $publishedAtDateTime->format('Y-m-d H:i:s');
                         $item->save();
                     }
                 }

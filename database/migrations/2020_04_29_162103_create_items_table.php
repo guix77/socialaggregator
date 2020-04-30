@@ -17,6 +17,7 @@ class CreateItemsTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('url')->unique();
+            $table->timestamp('published_at');
             $table->foreignId('user_id');
             $table->timestamps();
         });
