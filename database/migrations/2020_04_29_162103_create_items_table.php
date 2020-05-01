@@ -19,6 +19,7 @@ class CreateItemsTable extends Migration
             $table->string('url')->unique();
             $table->timestamp('published_at');
             $table->string('network');
+            $table->tinyInteger('status');
             $table->foreignId('user_id');
             $table->timestamps();
         });

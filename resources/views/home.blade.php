@@ -46,6 +46,7 @@
                         <th scope="col">User</th>
                         <th scope="col">Network</th>
                         <th scope="col">Item</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,6 +55,21 @@
                         <td>{{ $item->user->name }}</td>
                         <td>{{ $item->network }}</td>
                         <td><a href={{ $item->url }} target="_blank">{{ $item->title }}</a></td>
+                        <td>
+                            @can('update', $item)
+                            <form method="POST" action="{{ route('items.update', $item->id) }}" class="d-inline-block">
+                                @csrf
+                                @method('PUT')
+                                @if ($item->status === config('constants.status.published'))
+                                <input type="hidden" name="status" value={{ config('constants.status.unpublished') }}>
+                                <input type="submit" class="btn btn-secondary btn-sm" value={{ __('Unpublish') }}>
+                                @elseif ($item->status === config('constants.status.unpublished'))
+                                <input type="hidden" name="status" value={{ config('constants.status.published') }}>
+                                <input type="submit" class="btn btn-primary btn-sm" value={{ __('Publish') }}>
+                                @endif
+                            </form>
+                            @endcan
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

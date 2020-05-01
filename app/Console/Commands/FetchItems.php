@@ -64,6 +64,7 @@ class FetchItems extends Command
                         $item->url = $remoteItem->url;
                         $item->network = self::NETWORK_DRUPAL;
                         $item->published_at = date('Y-m-d H:i:s', $remoteItem->created);
+                        $item->status = config('constants.status.published');
                         $item->save();
                     }
                 }
@@ -83,6 +84,7 @@ class FetchItems extends Command
                             $item->url = $remoteItem->url;
                             $item->network = self::NETWORK_DRUPAL;
                             $item->published_at = date('Y-m-d H:i:s', $remoteItem->created);
+                            $item->status = config('constants.status.published');
                             $item->save();
                         }
                     }
@@ -100,6 +102,7 @@ class FetchItems extends Command
                         $item->network = self::NETWORK_GITHUB;
                         $publishedAtDateTime = new DateTime($remoteItem->published);
                         $item->published_at = $publishedAtDateTime->format('Y-m-d H:i:s');
+                        $item->status = config('constants.status.published');
                         $item->save();
                     }
                 }
